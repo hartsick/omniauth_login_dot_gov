@@ -41,13 +41,17 @@ You will need to register your service provider with our sandbox environment usi
 Now that your app is configured with login.gov's sandbox as a Service Provider, you can begin configuring your local application.
 
 1. Copy your private key to your application's `config` directory (eg. `config/private.pem`)
-2. Add this gem to the Gemfile:
+1. Add this gem to the Gemfile:
   ```ruby
   gem 'omniauth_login_dot_gov', :git => 'https://github.com/18f/omniauth_login_dot_gov.git',
                                 :branch => 'main'
   ```
-3. Install this gem and dependencies with `bundle install`
-4. Now, configure the Omniauth middleware with an initializer:
+1. Additionally, add the Omniauth CSRF protection gem to the Gemfile to address the CVE referenced above:
+   ```ruby
+   gem 'omniauth-rails_csrf_protection'
+   ```
+1. Install these gems and dependencies with `bundle install`
+1. Now, configure the Omniauth middleware with an initializer:
   ```ruby
   # config/initializers/omniauth.rb
   Rails.application.config.middleware.use OmniAuth::Builder do
@@ -61,7 +65,7 @@ Now that your app is configured with login.gov's sandbox as a Service Provider, 
     }
   end
   ```
-5. Create a controller for handling the callback, such as this:
+1. Create a controller for handling the callback, such as this:
   ```ruby
   # app/controllers/users/omniauth_controller.rb
   module Users
@@ -82,12 +86,12 @@ Now that your app is configured with login.gov's sandbox as a Service Provider, 
     end
   end
   ```
-6. Add the callback route to `routes.rb`
+1. Add the callback route to `routes.rb`
   ```ruby
   get '/auth/login_dot_gov/callback' => 'users/omniauth#callback'
   ```
 
-7. Start your application and send a `POST` request to: `/auth/login_dot_gov` (eg. http://localhost:3000/auth/login_dot_gov) to initiate authentication with login.gov!
+1. Start your application and send a `POST` request to: `/auth/login_dot_gov` (eg. http://localhost:3000/auth/login_dot_gov) to initiate authentication with login.gov!
 
 
 ## Public domain
